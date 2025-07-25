@@ -31,6 +31,17 @@ Se promueve el acceso abierto y gratuito al aprendizaje musical.
   📧 [email del segundo autor]  
   🐙 [GitHub: usuarioGitHub]
 
+# English
+
+<h1 align="center">RustTab</h1>
+<p align="center">This project aims to develop a web application designed for musicians, especially self-taught ones, who seek to improve their skills through an interactive, modern, and accessible platform.</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version" />
+  <img src="https://img.shields.io/badge/Built%20with-Astro-blueviolet" alt="Astro" />
+  <img src="https://img.shields.io/badge/Frontend-React-61DAFB.svg?logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/Styling-TailwindCSS-38B2AC.svg?logo=tailwindcss" alt="TailwindCSS" />
+</p>
+
   ## 📌 **Main Objectives:**  
 - Facilitate musical learning through interactive digital resources.  
 - Provide free access to tablatures, sheet music, and practice tools.  
