@@ -10,7 +10,7 @@
 ## 📌 **Objetivos principales:**  
 - Facilitar el aprendizaje musical mediante recursos digitales interactivos.  
 - Brindar acceso gratuito a tablaturas, partituras y herramientas de práctica.  
-- Ofrecer una experiencia educativa intuitiva para músicos principiantes y avanzados.
+- Ofrecer una experiencia intuitiva para músicos principiantes y avanzados.
 
 ## ⚙️ **Funcionalidades principales:**  
 - Búsqueda de canciones por nombre o artista.  
