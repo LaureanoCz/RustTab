@@ -28,8 +28,8 @@ Se promueve el acceso abierto y gratuito al aprendizaje musical.
   🐙 [GitHub: LaureanoCz](https://github.com/LaureanoCz)  
 
 - [Nombre del segundo autor]  
-  📧 [email del segundo autor]  
-  🐙 [GitHub: usuarioGitHub]
+  📧 jipavon@escuelasproa.edu.ar  
+  🐙 [GitHub: Juani](https://github.com/monoverdeenelcuevon)  
 
 # English
 
