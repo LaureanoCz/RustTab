@@ -27,7 +27,7 @@ Se promueve el acceso abierto y gratuito al aprendizaje musical.
   📧 lcarranza@escuelasproa.edu.ar  
   🐙 [GitHub: LaureanoCz](https://github.com/LaureanoCz)  
 
-- Pavon Juan Ignacio
+- Pavon Juan Ignacio  
   📧 jipavon@escuelasproa.edu.ar  
   🐙 [GitHub: Juani](https://github.com/monoverdeenelcuevon)  
 
