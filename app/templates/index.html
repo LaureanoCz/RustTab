@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/app/static/index.css">
+<title>RustTab | Que onda prro</title>
+</head>
+<body>
+
+<header>
+    <div class="header-icons-1">
+        <a href="/app/templates/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 12l2 -2l7 -7l7 7l2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+            <path d="M9 21v-6a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6" />
+        </svg>
+        </a>
+
+    </div>
+    <div class="header-icons-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+            <path d="M21 21l-6 -6" />
+        </svg>
+
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-help"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></svg>
+    </div>
+    <div class="header-icons-3">
+        <svg id="openModal" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-login-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2" /><path d="M3 12h13l-3 -3" /><path d="M13 15l3 -3" /></svg>
+    </div>
+</header>
+
+<!-- | Modal de login | -->
+<div class="modal-overlay" id="modalLogin">
+  <div class="modal">
+    <button class="close-btn" id="closeLogin">✕</button>
+    <h2>Iniciar sesión</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" placeholder="Tu nombre aca papu" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" placeholder="Tu pta contraseña aca" required>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="rememberMe" name="rememberMe"> Recordar contraseña
+        </label>
+      </div>
+      <div class="bottom-buttons">
+        <button class="submit" type="submit">Iniciar sesión</button>
+        <p class="forgot-password">¿Olvidaste tu contraseña? <a href="#">¡Recuperala!</a></p>
+        <p class="register-link">¿No tienes cuenta? <span id="goRegister">¡¡Registrate!!</span></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- | Modal de registro | -->
+<div class="modal-overlay" id="modalRegister">
+  <div class="modal">
+    <button class="close-btn" id="closeRegister">✕</button>
+    <h2>Registro</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="newUsername">Usuario:</label>
+        <input type="text" id="newUsername" name="newUsername" placeholder="Elige un nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="newEmail">Correo electrónico:</label>
+        <input type="email" id="newEmail" name="newEmail" placeholder="Tu correo" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Contraseña:</label>
+        <input type="password" id="newPassword" name="newPassword" placeholder="Elige una contraseña" required>
+      </div>
+    <div class="bottom-buttons">
+      <button class="submit" type="submit">Registrarse</button>
+      <p class="login-link">¿Ya tenés cuenta? <span id="goLogin">Iniciá sesión</span></p>
+    </div>
+    </form>
+  </div>
+</div>
+
+<script src="/app/static/modal.js"></script>
+
+</body>
+</html>
