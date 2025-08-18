@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/app/static/index.css">
+ <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 <title>RustTab | Que onda prro</title>
 </head>
 <body>
@@ -94,7 +94,7 @@
   </div>
 </div>
 
-<script src="/app/static/modal.js"></script>
+<script src="{{ url_for('static', filename='modal.js') }}"></script>
 
 </body>
 </html>
