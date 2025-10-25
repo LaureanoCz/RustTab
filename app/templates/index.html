@@ -1,100 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-<title>RustTab | Que onda prro</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-<header>
-    <div class="header-icons-1">
-        <a href="/app/templates/index.html">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M3 12l2 -2l7 -7l7 7l2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
-            <path d="M9 21v-6a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6" />
-        </svg>
-        </a>
+{% block title %}Home{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/index.css') }}">
+{% endblock %}
 
+{% block body %}
+<main>
+    <div class="main-container">
+        <div class="carousel"></div>
+        <div class="main-text">
+            <h1>RustTab - tesina</h1>
+            <h3>Laure</h3>
+            <p>este proyecto tiene como objetivo desarrollar una aplicación web orientada a músicos autodidactas, brindando una herramienta práctica y accesible para visualizar tablaturas e interactuar con material musical de manera clara y directa. La plataforma busca simplificar la experiencia del usuario, con una interfaz limpia, rápida y funcional, sin depender de modelos pagos ni incluir funciones innecesariamente complejas.
+           </p>
+            <p>
+            La elección del tema responde al interés personal en la música y el desarrollo web, así como a la detección de limitaciones en plataformas similares. A nivel académico, el proyecto permite aplicar conocimientos adquiridos en el curso, integrando diseño de interfaces, lógica de programación, gestión de componentes y documentación técnica.</p>
+            <span>
+                <a href="{{url_for('home')}}">¡¡Comienza ya!!</a>
+                <a href="https://github.com/LaureanoCz/RustTab" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-github"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg>
+                    Github
+                </a>
+            </span>
+        </div>
     </div>
-    <div class="header-icons-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round"
-            class="icon icon-tabler icons-tabler-outline icon-tabler-search">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-            <path d="M21 21l-6 -6" />
-        </svg>
-
-        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
-
-        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-help"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></svg>
-    </div>
-    <div class="header-icons-3">
-        <svg id="openModal" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-login-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2" /><path d="M3 12h13l-3 -3" /><path d="M13 15l3 -3" /></svg>
-    </div>
-</header>
-
-<!-- | Modal de login | -->
-<div class="modal-overlay" id="modalLogin">
-  <div class="modal">
-    <button class="close-btn" id="closeLogin">✕</button>
-    <h2>Iniciar sesión</h2>
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" name="username" placeholder="Tu nombre aca papu" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" placeholder="Tu pta contraseña aca" required>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" id="rememberMe" name="rememberMe"> Recordar contraseña
-        </label>
-      </div>
-      <div class="bottom-buttons">
-        <button class="submit" type="submit">Iniciar sesión</button>
-        <p class="forgot-password">¿Olvidaste tu contraseña? <a href="#">¡Recuperala!</a></p>
-        <p class="register-link">¿No tienes cuenta? <span id="goRegister">¡¡Registrate!!</span></p>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- | Modal de registro | -->
-<div class="modal-overlay" id="modalRegister">
-  <div class="modal">
-    <button class="close-btn" id="closeRegister">✕</button>
-    <h2>Registro</h2>
-    <form id="registerForm">
-      <div class="form-group">
-        <label for="newUsername">Usuario:</label>
-        <input type="text" id="newUsername" name="newUsername" placeholder="Elige un nombre" required>
-      </div>
-      <div class="form-group">
-        <label for="newEmail">Correo electrónico:</label>
-        <input type="email" id="newEmail" name="newEmail" placeholder="Tu correo" required>
-      </div>
-      <div class="form-group">
-        <label for="newPassword">Contraseña:</label>
-        <input type="password" id="newPassword" name="newPassword" placeholder="Elige una contraseña" required>
-      </div>
-    <div class="bottom-buttons">
-      <button class="submit" type="submit">Registrarse</button>
-      <p class="login-link">¿Ya tenés cuenta? <span id="goLogin">Iniciá sesión</span></p>
-    </div>
-    </form>
-  </div>
-</div>
-
-<script src="{{ url_for('static', filename='modal.js') }}"></script>
-
-</body>
-</html>
+</main>
+<footer>
+    <p>Hecho con <span>❤️</span> para vos</p>
+    <p>© 2025 Laureano Carranza</p>
+</footer>
+{% endblock %}

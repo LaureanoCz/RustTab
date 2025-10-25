@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #0d0d0d;
+    color: #f0f0f0;
+  }
+
+/* Estilo del main */
+main {
+    height: calc(100vh - 144px);
+    width: 100%;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.carousel {
+    width: 50%;
+    height: 80%;
+    background-color: #222;
+    border-radius: 10px;
+    margin: 0 0.5rem;
+}
+
+.main-text {
+  width: 50%;
+  height: 80%;
+  color: #f0f0f0;
+  margin: 0 0.5rem;
+}
+
+.main-text h1 {
+    font-size: 3rem;
+    margin-bottom: 0;
+
+}
+
+.main-text h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #ffffff63;
+}
+
+.main-text button {
+    margin: 1.2rem 0 2rem 0;
+    height: 2.5rem;
+    width: 30%;
+    border-radius: 20px;
+    background-color: #8ff000;
+    font-weight: bold;
+    border: none;
+    color: #0d0d0d;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.main-text span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.main-text a {
+  display: flex;
+  align-items: center;
+    margin: 1.2rem 0 2rem 0;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    background-color: #8ff000;
+    font-weight: bold;
+    color: #0d0d0d;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+/* Estilo del footer */
+
+footer {
+    color: #999;
+    text-align: center;
+    padding-bottom: 0.4rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #222;
+}
+
+footer p:first-child span {
+    display: inline-block;
+    animation: beat 1s infinite;
+}
+
+@keyframes beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
