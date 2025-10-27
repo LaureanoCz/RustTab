@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Canción{% endblock %}
+{% block styles %} <link rel="stylesheet" href="{{ url_for('static', filename='css/fav.css') }}"> {% endblock %}
+
+{% block body %}
+<div class="fav-info">
+    <h1>Lista de Favoritos</h1>
+    <ul>
+        <li>Canción 1 - Autor 1</li>
+        <li>Canción 2 - Autor 2</li>
+        <li>Canción 3 - Autor 3</li>
+    </ul>
+{% endblock %}

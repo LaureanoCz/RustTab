@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded"), function () {
+document.addEventListener("DOMContentLoaded", function () {
   const VF = Vex.Flow;
   const div = document.getElementById("tab");
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
