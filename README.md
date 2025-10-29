@@ -1,7 +1,7 @@
 <h1 align="center">RustTab</h1>
 <p align="center">Este proyecto tiene como objetivo el desarrollo de una aplicación web destinada a músicos, especialmente autodidactas, que buscan mejorar sus habilidades a través de una plataforma interactiva, moderna y accesible.</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.3-blue.svg" alt="Version" />
+  <img src="https://img.shields.io/badge/version-1.2.4-blue.svg" alt="Version" />
   <img src="https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-F7DF1E.svg?logo=javascript" alt="Frontend" />
   <img src="https://img.shields.io/badge/Backend-Python-3776AB.svg?logo=python" alt="Python" />
 </p>

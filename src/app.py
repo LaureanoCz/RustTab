@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_mysqldb import MySQL
+from flask_login import LoginManager, login_user, logout_user, login_required
 
 from config import config
 
@@ -14,6 +15,12 @@ app = Flask(__name__)
 app.config.from_object(config['development'])
 app.secret_key = app.config['SECRET_KEY']
 db=MySQL(app)
+
+login_manager_app = LoginManager(app)
+
+@login_manager_app.user_loader
+def load_user(id):
+    return ModelUser.get_by_id(db, id)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -47,16 +54,20 @@ def login():
         logged_user = ModelUser.login(db, user)
         if logged_user != None:
             if logged_user.password:
-                return redirect(url_for('home'))
+                login_user(logged_user)
+                return redirect(url_for("home2"))
             else:
                 flash("Usuario o contraseña incorrecta")
                 return render_template("auth/login.html")
         else:
-            flash("Usuario incorrecta")
+            flash("Usuario no encontrado...")
             return render_template("auth/login.html")
     else:
         return render_template("auth/login.html")
 
+@app.route("/home2")
+def home2():
+    return render_template("index2.html")
     
 if __name__ == "__main__":
 
