@@ -79,6 +79,26 @@ box-shadow: 0px 0px 6px 3px rgba(155,0,0,0.79);
   font-weight: bold;
 }
 
+/*  register notification */
+.register-notification-content {
+    position: fixed;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #2080cf ;
+    padding: 5px;
+    color: #2080cf;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 2px rgba(32,128,207,0.75);
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(32,128,207,0.75);
+  -moz-box-shadow: 0px 0px 10px 2px rgba(32,128,207,0.75);
+    background-color: #0d0d0d;
+  }
+
 /* Main Section */
 
 main {

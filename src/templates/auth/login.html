@@ -18,6 +18,12 @@
             </svg>
         </a>
     </header>
+    <!-- Registration success notification modal -->
+    <div id="registrationSuccessNotification" class="logout-notification" style="display: none;">
+        <div class="register-notification-content">
+            <p>Usuario creado correctamente</p>
+        </div>
+    </div>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="error-message">
@@ -48,6 +54,26 @@
             </div>
         </div>
     </main>
-<script src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
+    <script>
+        // Check for registration success notification
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('registered') === 'success') {
+                const registrationSuccessNotification = document.getElementById('registrationSuccessNotification');
+                if (registrationSuccessNotification) {
+                    registrationSuccessNotification.style.display = 'flex';
+                    
+                    // Auto-hide after 3 seconds
+                    setTimeout(function() {
+                        registrationSuccessNotification.style.display = 'none';
+                    }, 3000);
+                    
+                    // Clean URL (remove query parameter)
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

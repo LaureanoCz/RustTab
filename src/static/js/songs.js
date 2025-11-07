@@ -1,48 +1,112 @@
 document.addEventListener("DOMContentLoaded", function () {
   const VF = Vex.Flow;
   const div = document.getElementById("tab");
-  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  
+  if (!div) {
+    console.error("Tab container not found");
+    return;
+  }
 
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   const renderWidth = div.clientWidth;
   const margin = 20;
   const staveHeight = 80; // espacio vertical entre filas de compases
-  renderer.resize(renderWidth, 400);
+  const measuresPerRow = 4;        // sugerencia visual (pero usamos auto-wrap)
+  
+  // Parse tablature data from database or use default patterns
+  let measurePatterns = [];
+  let totalMeasures = 12;
+  
+  // Get totalMeasures from songData if available (will be set after parsing)
+  if (typeof songData !== 'undefined' && songData && songData.compases) {
+    totalMeasures = parseInt(songData.compases) || 12;
+  }
+
+  // Calculate initial height based on estimated measures
+  const estimatedHeight = Math.ceil(totalMeasures / measuresPerRow) * staveHeight + 100;
+  renderer.resize(renderWidth, Math.max(400, estimatedHeight));
   const context = renderer.getContext();
 
-  // Estilos (igual que vos venías)
+  // Estilos
   context.setFont("Arial", 12, "").setFillStyle("#919191ff").setStrokeStyle("#919191ff");
   context.setBackgroundFillStyle("#1f1f1f");
 
   // ===== Configs =====
-  const totalMeasures = 12;        // cuántos compases querés dibujar
-  const measuresPerRow = 4;        // sugerencia visual (pero usamos auto-wrap)
   const compasWidth = Math.floor((renderWidth - margin * 2) / measuresPerRow); // ancho objetivo por compás
   const startX = margin;
   let currentX = startX;
   let currentY = 20;               // posición vertical inicial
   let measureNumber = 1;
 
-  // Ejemplo de contenido por compás (podés cambiar o generar dinámicamente)
-  // Aquí definimos 3 patrones para rotar y que no quede todo igual.
-  const measurePatterns = [
-    [
-      new VF.TabNote({ positions: [{ str: 3, fret: 5 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 3, fret: 7 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: "q" }),
-      new VF.TabNote({ positions: [{ str: 2, fret: 7 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 1, fret: 5 }], duration: "8" }),
-    ],
-    [
-      new VF.TabNote({ positions: [{ str: 1, fret: 7 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 1, fret: 5 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 2, fret: 7 }], duration: "8" }),
-      new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: "8" })
-    ],
-    [
-      new VF.TabNote({ positions: [{ str: 4, fret: 2 }], duration: "q" }),
-      new VF.TabNote({ positions: [{ str: 3, fret: 2 }], duration: "q" })
-    ]
-  ];
+  // Check if we have song data from the database
+  if (typeof songData !== 'undefined' && songData && songData.tablatura_data) {
+    try {
+      // tablatura_data should be a JSON object with structure:
+      // {
+      //   "measures": [
+      //     {
+      //       "notes": [
+      //         { "str": 3, "fret": 5, "duration": "8" },
+      //         { "str": 3, "fret": 7, "duration": "8" }
+      //       ]
+      //     }
+      //   ],
+      //   "totalMeasures": 12
+      // }
+      const tabData = songData.tablatura_data;
+      
+      if (tabData.measures && Array.isArray(tabData.measures)) {
+        totalMeasures = tabData.totalMeasures || tabData.measures.length;
+        // Resize renderer based on actual measures
+        const actualHeight = Math.ceil(totalMeasures / measuresPerRow) * staveHeight + 100;
+        renderer.resize(renderWidth, Math.max(400, actualHeight));
+        measurePatterns = tabData.measures.map(measure => {
+          if (measure.notes && Array.isArray(measure.notes)) {
+            return measure.notes.map(note => {
+              return new VF.TabNote({
+                positions: [{ str: note.str, fret: note.fret }],
+                duration: note.duration || "q"
+              });
+            });
+          }
+          return [];
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing tablature data:", error);
+      // Fall back to default patterns
+      measurePatterns = getDefaultPatterns();
+    }
+  } else {
+    // Use default patterns if no data from database
+    measurePatterns = getDefaultPatterns();
+    if (typeof songData !== 'undefined' && songData && songData.compases) {
+      totalMeasures = parseInt(songData.compases) || 12;
+    }
+  }
+
+  // Default patterns function
+  function getDefaultPatterns() {
+    return [
+      [
+        new VF.TabNote({ positions: [{ str: 3, fret: 5 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 3, fret: 7 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: "q" }),
+        new VF.TabNote({ positions: [{ str: 2, fret: 7 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 1, fret: 5 }], duration: "8" }),
+      ],
+      [
+        new VF.TabNote({ positions: [{ str: 1, fret: 7 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 1, fret: 5 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 2, fret: 7 }], duration: "8" }),
+        new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: "8" })
+      ],
+      [
+        new VF.TabNote({ positions: [{ str: 4, fret: 2 }], duration: "q" }),
+        new VF.TabNote({ positions: [{ str: 3, fret: 2 }], duration: "q" })
+      ]
+    ];
+  }
 
   // Helper: crear y dibujar un compás con notas
   function drawMeasure(x, y, width, num, notes, isLast) {

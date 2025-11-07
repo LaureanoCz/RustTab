@@ -18,13 +18,22 @@
             </svg>
         </a>
     </header>
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="error-message">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+            <span class="close-btn">✕</span>
+        {% endif %}
+    {% endwith %}
     <main>
         <div class="container">
             <img src="{{ url_for('static', filename='./images/lr/guitar1.webp')}}" alt="">
             <div class="form-container">
                 <h1>Crear cuenta</h1>
-                <form action="/register">
+                <form action="/register" method="POST">
                     <div class="li">
                         <label for="username">Nombre de usuario</label>
                         <input type="text" id="username" name="username" required>
@@ -42,5 +51,6 @@
             </div>
         </div>
     </main>
+    <script src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
 </body>
 </html>
