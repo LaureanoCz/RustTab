@@ -37,7 +37,7 @@ Se promueve el acceso abierto y gratuito al aprendizaje musical.
 <h1 align="center">RustTab</h1>
 <p align="center">This project aims to develop a web application designed for musicians, especially self-taught ones, who seek to improve their skills through an interactive, modern, and accessible platform.</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1-blue.svg" alt="Version" />
+  <img src="https://img.shields.io/badge/version-1.3-blue.svg" alt="Version" />
   <img src="https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-F7DF1E.svg?logo=javascript" alt="Frontend" />
   <img src="https://img.shields.io/badge/Backend-Python-3776AB.svg?logo=python" alt="Python" />
 </p>
