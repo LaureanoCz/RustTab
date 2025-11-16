@@ -12,10 +12,10 @@
 - Ofrecer una experiencia intuitiva para músicos principiantes y avanzados.
 
 ## ⚙️ **Funcionalidades principales:**  
-- Búsqueda de canciones por nombre o artista.  
-- Visualización de tablaturas y partituras.  
-- Reproducción en tiempo real de las tablaturas.  
-- Interfaz responsiva y accesible.
+- Búsqueda de canciones por nombre o artista.
+- Sistema de creación de usuarios e inicio de sesión
+- Visualización de tablaturas y partituras
+- Interfaz visualmente atractiva e intuitiva
 
 ## 📄 **Licencia:**  
 Este proyecto es parte de un trabajo académico. Su uso es libre con fines educativos y sin fines de lucro.  
@@ -51,9 +51,9 @@ Se promueve el acceso abierto y gratuito al aprendizaje musical.
 ## ⚙️ Main Features:
 
 - Search for songs by name or artist.
-- View tablatures and sheet music.
-- Real-time playback of tablatures.
-- Responsive and accessible interface.
+- User registration and login system
+- Viewing of tablatures and sheet music
+- Visually appealing and intuitive interface
 
 ## 📄 License:
 
