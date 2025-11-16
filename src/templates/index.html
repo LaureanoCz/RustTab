@@ -6,6 +6,18 @@
 {% endblock %}
 
 {% block body %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="error-message">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    <span class="close-btn">✕</span>
+{% endif %}
+{% endwith %}
+
 <main>
     <div class="main-container">
         <div class="carousel"></div>
@@ -30,4 +42,5 @@
     <p>Hecho con <span>❤️</span> para vos</p>
     <p>© 2025 Laureano Carranza</p>
 </footer>
+<script src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
 {% endblock %}

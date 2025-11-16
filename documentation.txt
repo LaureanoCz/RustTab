@@ -9,3 +9,26 @@
     inputs-borders: none
     labels-text-color: #848484
     title-color: #a2a2a2
+
+> DataBase RustTab
+
+-tabla de usuarios
+CREATE TABLE usuarios (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    contraseña VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+- Tabla de canciones
+CREATE TABLE songs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    artist VARCHAR(255) NOT NULL,
+    release_date DATE NULL,
+    bpm INT DEFAULT 120,
+    measures INT DEFAULT 0,
+    youtube_url VARCHAR(255) NULL,
+    json_file VARCHAR(255) NOT NULL,
+);

@@ -1,0 +1,66 @@
+.parent {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    height: calc(100vh - 100px);
+    margin: 1rem;
+    gap: 1rem;
+}
+
+/* Panel izquierdo */
+.div1 {
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Panel derecho (tablatura) */
+.div2 {
+    margin: 0 2rem;
+    overflow-y: auto;
+}
+
+/* Contenedor de la tab */
+#tab {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+/* Información de la canción */
+.song-info {
+    text-align: center;
+    color: #f0f0f0;
+}
+
+.song-info h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0rem;
+    color: #f0f0f0;
+}
+
+.song-info h2 {
+    font-size: 1.5rem;
+    margin: 0.2rem 0;
+    font-weight: normal;
+    color: #848484;
+}
+
+.song-info span {
+    font-size: 1.2rem;
+    margin: 0.2rem 0;
+    font-weight: normal;
+    color: #707070;
+}
+
+.song-info iframe {
+    margin-top: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+}

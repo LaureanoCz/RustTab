@@ -1,0 +1,36 @@
+{
+  "title": "Monster",
+  "artist": "Skillet",
+  "bpm": 120,
+  "tuning": ["E", "A", "D", "G", "B", "E"],
+  "measures": [
+    {
+      "number": 1,
+      "notes": [
+        { "string": 5, "fret": 0 },
+        { "string": 4, "fret": 2 }
+      ]
+    },
+    {
+      "number": 2,
+      "notes": [
+        { "string": 5, "fret": 3 },
+        { "string": 4, "fret": 0 }
+      ]
+    },
+    {
+      "number": 3,
+      "notes": [
+        { "string": 5, "fret": 5 },
+        { "string": 4, "fret": 3 }
+      ]
+    },
+    {
+      "number": 4,
+      "notes": [
+        { "string": 5, "fret": 2 },
+        { "string": 4, "fret": 5 }
+      ]
+    }
+  ]
+}

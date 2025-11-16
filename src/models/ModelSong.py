@@ -1,5 +1,6 @@
 from .entities.song import Song
 import json
+import re
 
 class ModelSong():
     @classmethod
@@ -83,11 +84,19 @@ class ModelSong():
             rows = cursor.fetchall()
             results = []
             for row in rows:
+                # Use slug from database, or generate one preserving underscores
+                slug = row[3] if len(row) > 3 and row[3] else None
+                if not slug:
+                    # Generate slug preserving underscores (common in song names like "Hangar_18")
+                    slug = row[1].lower().replace(' ', '_').replace('-', '_')
+                    # Remove special characters but keep underscores and alphanumeric
+                    slug = re.sub(r'[^a-z0-9_]', '', slug)
+                
                 results.append({
                     'id': row[0],
                     'titulo': row[1],
                     'artista': row[2],
-                    'slug': row[3] if len(row) > 3 and row[3] else row[1].lower().replace(' ', '-').replace('_', '-')
+                    'slug': slug
                 })
             return results
         except Exception as ex:
@@ -115,11 +124,19 @@ class ModelSong():
             rows = cursor.fetchall()
             results = []
             for row in rows:
+                # Use slug from database, or generate one preserving underscores
+                slug = row[3] if len(row) > 3 and row[3] else None
+                if not slug:
+                    # Generate slug preserving underscores (common in song names like "Hangar_18")
+                    slug = row[1].lower().replace(' ', '_').replace('-', '_')
+                    # Remove special characters but keep underscores and alphanumeric
+                    slug = re.sub(r'[^a-z0-9_]', '', slug)
+                
                 results.append({
                     'id': row[0],
                     'titulo': row[1],
                     'artista': row[2],
-                    'slug': row[3] if len(row) > 3 and row[3] else row[1].lower().replace(' ', '-').replace('_', '-')
+                    'slug': slug
                 })
             return results
         except Exception as ex:

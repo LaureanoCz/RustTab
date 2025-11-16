@@ -1,63 +1,30 @@
 {% extends "layout.html" %}
 
-{% block title %}{% if song %}{{ song.titulo }}{% else %}Canción{% endif %}{% endblock %}
-{% block styles %} <link rel="stylesheet" href="{{ url_for('static', filename='css/songs.css') }}"> {% endblock %}
+{% block title %}{{ song['title'] }} - RustTab{% endblock %}
+{% block styles %} <link rel="stylesheet" href="{{ url_for('static', filename='css/vexflow/songs.css') }}"> {% endblock %}
 
 {% block body %}
+
+<!-- Cargar VexFlow PRIMERO (sin defer) -->
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.1.0/build/vexflow-min.js"></script>
+
+<script>
+    const TAB_DATA = {{ tab_data | tojson }};
+</script>
+    
+<!-- Cargar el script personalizado DESPUÉS (con defer) -->
+<script src="{{ url_for('static', filename='js/render.js') }}" defer></script>
+
 <main class="parent">
-    <div class="div1" id="tab-container">
-        <div id="tab"></div>
+    <div class="div1 song-info">
+        <h1>{{ song['title'] }}</h1>
+        <h2>{{ song['artist'] }}</h2>
+        <span>fecha de publicacion: {{song['release_date']}}</span>
+        <iframe width="454" height="150" src="{{ song['youtube_url'] }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
-    <div class="div2 song-info">
-        {% if song %}
-            <h1>{{ song.titulo }}</h1>
-            <h2>Artista: {{ song.artista }}</h2>
-            {% if song.fecha_publicacion %}
-            <h3>Fecha de publicación: {% if song.fecha_publicacion %}{{ song.fecha_publicacion.strftime('%d/%m/%Y') if hasattr(song.fecha_publicacion, 'strftime') else song.fecha_publicacion }}{% else %}N/A{% endif %}</h3>
-            {% endif %}
-            {% if song.tiempo %}
-            <p><strong>Tempo:</strong> {{ song.tiempo }} BPM</p>
-            {% endif %}
-            {% if song.compases %}
-            <p><strong>Compases:</strong> {{ song.compases }}</p>
-            {% endif %}
-            {% if song.corcheas %}
-            <p><strong>Corcheas:</strong> {{ song.corcheas }}</p>
-            {% endif %}
-            {% if song.notas %}
-            <div class="song-notes">
-                <h4>Notas:</h4>
-                <p>{{ song.notas }}</p>
-            </div>
-            {% endif %}
-            {% if song.ligaduras %}
-            <div class="song-ligaduras">
-                <h4>Ligaduras:</h4>
-                <p>{{ song.ligaduras }}</p>
-            </div>
-            {% endif %}
-        {% else %}
-            <h1>Canción no encontrada</h1>
-        {% endif %}
+    <div class="div2" id="tab-container">
+        <div id="tab"></div>
     </div>
 </main>
 
-<!-- Cargar VexFlow (FUNCIONANDO) -->
-<script src="https://cdn.jsdelivr.net/npm/vexflow@4.1.0/build/cjs/vexflow-debug.js"></script>
-<script>
-    // Pass song data to JavaScript - properly serialized as JSON
-    {% if song %}
-    const songData = {{ {
-        'id': song.id,
-        'titulo': song.titulo,
-        'artista': song.artista,
-        'tiempo': song.tiempo if song.tiempo else None,
-        'compases': song.compases if song.compases else None,
-        'tablatura_data': tablatura_data
-    }|tojson|safe }};
-    {% else %}
-    const songData = null;
-    {% endif %}
-</script>
-<script src="{{ url_for('static', filename='js/songs.js') }}"></script>
 {% endblock %}
