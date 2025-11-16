@@ -58,7 +58,6 @@ class ModelUser():
     def create_user(cls, db, username, email, password):
         """Create a new user in the database"""
         try:
-            # Hash the password before storing
             hashed_password = generate_password_hash(password)
             cursor = db.connection.cursor()
             sql = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"

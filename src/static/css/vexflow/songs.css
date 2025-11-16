@@ -53,6 +53,7 @@
 .song-info {
     text-align: center;
     color: #f0f0f0;
+    position: relative;
 }
 
 .song-info h1 {
@@ -83,3 +84,46 @@
     height: 260px;
     object-fit: cover;
 }
+
+.favorite-btn{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: transparent;
+    border: none;
+    color: #f0f0f0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    z-index: 10;
+}
+.favorite-btn svg{ width: 32px; height:32px; }
+.favorite-btn:hover{ filter: brightness(1.2); }
+
+.fav-modal{
+    position: fixed;
+    left: 0; top: 0; right:0; bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+}
+.fav-modal-content{
+    background: #171717;
+    color: #f0f0f0;
+    padding: 1.2rem;
+    border-radius: 10px;
+    width: 320px;
+    text-align:center;
+}
+.fav-modal-actions{ margin-top: 1rem; display:flex; gap:0.6rem; justify-content:center; }
+.fav-modal-actions button{ padding:0.5rem 0.8rem; border-radius:6px; border:none; cursor:pointer }
+.fav-modal-actions #fav-modal-login{ background:#8ff000; color:#000 }
+.fav-modal-actions #fav-modal-close{ background:#2a2a2a; color:#fff }
+

@@ -2,6 +2,10 @@ from .entities.song import Song
 import json
 import re
 
+
+# ModelSong - consultas y utilidades relacionadas con las canciones.
+# Proporciona métodos para obtener canciones, buscar por término y
+# parsear datos de tablatura almacenados en JSON.
 class ModelSong():
     @classmethod
     def get_by_id(cls, db, id):
@@ -32,7 +36,7 @@ class ModelSong():
 
     @classmethod
     def get_by_slug(cls, db, cancion_slug):
-        # Busca por título (no hay columna slug en la tabla `songs`)
+        """Busca una canción por título (case-insensitive) y devuelve `Song`."""
         try:
             cursor = db.connection.cursor()
             sql = """SELECT id, title, artist, release_date, bpm, measures, json_file
@@ -59,7 +63,10 @@ class ModelSong():
 
     @classmethod
     def parse_tablatura_data(cls, tablatura_data):
-        # Convierte JSON string a diccionario Python
+        """Parsea el campo de tablatura cuando está en formato JSON string.
+
+        Devuelve `None` si no hay datos o si el JSON no es válido.
+        """
         if not tablatura_data:
             return None
         try:
@@ -122,4 +129,4 @@ class ModelSong():
             return results
         except Exception as ex:
             raise Exception(ex)
-
+    

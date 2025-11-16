@@ -33,6 +33,18 @@ CREATE TABLE songs (
     json_file VARCHAR(255) NOT NULL,
 );
 
+- Tabla de favoritos
+CREATE TABLE IF NOT EXISTS favorites (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    song_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_fav_user FOREIGN KEY (user_id) REFERENCES users(id_user) ON DELETE CASCADE,
+    CONSTRAINT fk_fav_song FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE,
+    UNIQUE KEY user_song_unique (user_id, song_id)
+);
+
+
 
 
 > datos de canciones

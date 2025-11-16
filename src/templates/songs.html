@@ -17,12 +17,21 @@
 
 <main class="parent">
     <div class="div1 song-info">
+        <button id="favorite-btn" class="favorite-btn" aria-label="Toggle favorite"
+                data-favorite="{{ 1 if is_favorite else 0 }}" data-song-id="{{ song['id'] }}">
+            {% if is_favorite %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+            {% endif %}
+        </button>
+        
         <h1>{{ song['title'] }}</h1>
         <h2>{{ song['artist'] }}</h2>
         <span>fecha de publicacion: {{song['release_date']}}</span>
-    <iframe width="454" height="150"
-    src="https://www.youtube.com/embed/{{ id }}"
-    frameborder="0" allowfullscreen></iframe>
+        <iframe width="454" height="150"
+        src="https://www.youtube.com/embed/{{ id }}"
+        frameborder="0" allowfullscreen></iframe>
     
     </div>
     <div class="div2" id="tab-container">
@@ -32,6 +41,64 @@
 <script>
     const TAB_DATA = JSON.parse(`{{ tab_data | tojson | safe }}`);
     const JSON_FILE = "{{ json_file }}";
+</script>
+
+<!-- Favorite toggle script -->
+<script>
+    (function(){
+        const favBtn = document.getElementById('favorite-btn');
+        if(!favBtn) return;
+        const songId = favBtn.getAttribute('data-song-id');
+
+        function setStar(favorite){
+            favBtn.setAttribute('data-favorite', favorite ? '1' : '0');
+            favBtn.innerHTML = favorite ?
+                `<!-- filled -->\n<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>` :
+                `<!-- outline -->\n<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>`;
+        }
+
+        favBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            fetch(`/toggle_favorite/${songId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            }).then(async (res) => {
+                if(res.status === 401){
+                    // show modal to prompt login
+                    showLoginModal();
+                    return;
+                }
+                const data = await res.json();
+                if(data && typeof data.favorite !== 'undefined'){
+                    setStar(data.favorite);
+                }
+            }).catch((err) => {
+                console.error('Error toggling favorite', err);
+            });
+        });
+
+        function showLoginModal(){
+            // Prefer the reusable modal defined in layout.html
+            const modal = document.getElementById('fav-login-modal');
+            if(modal){
+                modal.style.display = 'flex';
+                return;
+            }
+            // Fallback: create a temporary modal
+            let temp = document.createElement('div');
+            temp.id = 'fav-login-modal';
+            temp.className = 'fav-modal';
+            temp.innerHTML = `<div class="fav-modal-content"><p>Debes iniciar sesión para usar favoritos.</p><div class="fav-modal-actions"><button id="fav-modal-login">Ir a Login</button><button id="fav-modal-close">Cancelar</button></div></div>`;
+            document.body.appendChild(temp);
+            document.getElementById('fav-modal-login').addEventListener('click', function(){ window.location.href = '/login'; });
+            document.getElementById('fav-modal-close').addEventListener('click', function(){ temp.remove(); });
+        }
+
+    })();
 </script>
 
 <script src="{{ url_for('static', filename='js/render.js') }}"></script>

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_mysqldb import MySQL
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import re
 
 import os
@@ -12,6 +12,7 @@ from config import config
 # Models
 from models.ModelUser import ModelUser
 from models.ModelSong import ModelSong
+from models.ModelFavorite import ModelFavorite
 
 # Entities
 from models.entities.user import User
@@ -43,9 +44,32 @@ def home():
 
 
 # Ruta de canciones favoritas
-@app.route("/fav")
-def fav():
-    return render_template("fav.html")
+@app.route('/favoritos')
+def favoritos():
+    try:
+        if not current_user or not current_user.is_authenticated:
+            return render_template('fav.html', favorites=[], open_login_modal=True)
+
+        cursor = db.connection.cursor()
+        sql = """
+            SELECT s.id, s.title, s.artist
+            FROM favorites f
+            JOIN songs s ON f.song_id = s.id
+            WHERE f.user_id = %s
+            ORDER BY f.created_at DESC
+        """
+        cursor.execute(sql, (current_user.id,))
+        rows = cursor.fetchall()
+        favorites = []
+        for r in rows:
+            if isinstance(r, dict):
+                favorites.append({'id': r.get('id'), 'title': r.get('title'), 'artist': r.get('artist')})
+            else:
+                favorites.append({'id': r[0], 'title': r[1], 'artist': r[2]})
+
+        return render_template('fav.html', favorites=favorites, open_login_modal=False)
+    except Exception as ex:
+        return render_template('fav.html', favorites=[], open_login_modal=(not current_user.is_authenticated if current_user else True))
 
 
 
@@ -67,7 +91,34 @@ def song(title):
     with open(json_path, "r", encoding="utf-8") as f:
         tab_data = json.load(f)
 
-    return render_template("songs.html", song=song, tab_data=tab_data, json_file=song["json_file"])
+    is_favorite = False
+    try:
+        if current_user and current_user.is_authenticated:
+            try:
+                is_favorite = ModelFavorite.is_favorite(db, current_user.id, song['id'])
+            except Exception:
+                is_favorite = False
+    except Exception:
+        is_favorite = False
+
+    return render_template("songs.html", song=song, tab_data=tab_data, json_file=song["json_file"], is_favorite=is_favorite)
+
+
+@app.route('/toggle_favorite/<int:song_id>', methods=['POST'])
+def toggle_favorite(song_id):
+    try:
+        if not current_user or not current_user.is_authenticated:
+            return jsonify({'error': 'User not authenticated'}), 401
+
+        user_id = current_user.id
+        if ModelFavorite.is_favorite(db, user_id, song_id):
+            ModelFavorite.remove_favorite(db, user_id, song_id)
+            return jsonify({'favorite': False})
+        else:
+            ModelFavorite.add_favorite(db, user_id, song_id)
+            return jsonify({'favorite': True})
+    except Exception as ex:
+        return jsonify({'error': str(ex)}), 500
 
 
 @app.route("/api/search")
@@ -76,7 +127,6 @@ def search_songs():
     try:
         query = request.args.get('q', '').strip()
         
-        # If query is empty, return all songs
         if not query or len(query) < 1:
             results = ModelSong.get_all_songs(db, limit=100)
         else:

@@ -1,14 +1,109 @@
 {% extends "layout.html" %}
 
-{% block title %}Canción{% endblock %}
-{% block styles %} <link rel="stylesheet" href="{{ url_for('static', filename='css/fav.css') }}"> {% endblock %}
+{% block title %}Favoritos{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fav.css') }}">
+{% endblock %}
 
 {% block body %}
-<div class="fav-info">
-    <h1>Lista de Favoritos</h1>
-    <ul>
-        <li>Canción 1 - Autor 1</li>
-        <li>Canción 2 - Autor 2</li>
-        <li>Canción 3 - Autor 3</li>
-    </ul>
+<main class="fav-page container">
+    <div class="fav-header">
+        <h1>Lista de Favoritos</h1>
+    </div>
+
+    <div id="fav-list" class="fav-list">
+        {% if favorites and favorites|length > 0 %}
+            {% for song in favorites %}
+                <div class="favorite-item" data-song-id="{{ song.id }}">
+                    <button class="fav-toggle" data-song-id="{{ song.id }}" aria-label="Quitar favorito">
+                        <!-- filled star -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icon-tabler-star-filled"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    </button>
+
+                    <div class="song-info">
+                        <h3>{{ song.title }}</h3>
+                        <p>{{ song.artist }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-message" class="empty-message">No tienes canciones favoritas aún.</div>
+        {% endif %}
+    </div>
+</main>
+
+<script>
+    (function(){
+        const favList = document.getElementById('fav-list');
+        const emptyMessage = document.getElementById('empty-message');
+
+        function removeItemFromDOM(songId){
+            const el = document.querySelector(`.favorite-item[data-song-id="${songId}"]`);
+            if(el){
+                el.remove();
+            }
+            // if no items left show empty message
+            const remaining = document.querySelectorAll('.favorite-item');
+            if(remaining.length === 0){
+                if(!document.getElementById('empty-message')){
+                    const msg = document.createElement('div');
+                    msg.id = 'empty-message';
+                    msg.className = 'empty-message';
+                    msg.textContent = 'No tienes canciones favoritas aún.';
+                    favList.appendChild(msg);
+                }
+            }
+        }
+
+        async function toggleFavorite(songId, button){
+            try{
+                const res = await fetch(`/toggle_favorite/${songId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    credentials: 'same-origin'
+                });
+
+                if(res.status === 401){
+                    // open existing modal from layout
+                    const modal = document.getElementById('fav-login-modal');
+                    if(modal) modal.style.display = 'flex';
+                    return;
+                }
+
+                const data = await res.json();
+                if(data && typeof data.favorite !== 'undefined'){
+                    // If removed (favorite=false) remove element from list
+                    if(data.favorite === false){
+                        removeItemFromDOM(songId);
+                    } else {
+                        // if it becomes favorite (unlikely here) toggle icon to filled
+                        // but page lists only favorites so we don't add
+                    }
+                }
+            }catch(err){
+                console.error('Error toggling favorite', err);
+            }
+        }
+
+        // attach handlers
+        document.addEventListener('DOMContentLoaded', function(){
+            const buttons = document.querySelectorAll('.fav-toggle');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const songId = this.getAttribute('data-song-id');
+                    toggleFavorite(songId, this);
+                });
+            });
+
+            // If server asked to auto-open login modal (when not authenticated)
+            const openModalFlag = {{ 'true' if (open_login_modal if open_login_modal is defined else False) else 'false' }};
+            if(openModalFlag){
+                const modal = document.getElementById('fav-login-modal');
+                if(modal) modal.style.display = 'flex';
+            }
+        });
+    })();
+</script>
+
 {% endblock %}

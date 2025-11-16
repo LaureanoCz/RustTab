@@ -20,8 +20,7 @@
                 <path d="M9 21v-6a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6" />
             </svg>
             </a>
-        </div>
-        <div class="header-icons-2">
+
             <svg id="searchIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round"
@@ -31,12 +30,11 @@
                 <path d="M21 21l-6 -6" />
             </svg>
 
-            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+            <svg id="headerFav" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
 
-            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-help"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></svg>
         </div>
 
-        <div class="header-icons-3" id="headerIcons3">
+        <div class="header-icons-2" id="headerIcons3">
             {% if current_user.is_authenticated %}
                 <div class="user-menu-container">
                     <a href="#" id="userMenuToggle" class="user-icon-link">
@@ -91,9 +89,21 @@
             <div id="searchResults" class="search-results"></div>
         </div>
     </div>
+    <!-- Favorite login modal (reusable) -->
+    <div id="fav-login-modal" class="fav-modal" style="display: none;">
+        <div class="fav-modal-content">
+            <p>Debes iniciar sesión para usar favoritos.</p>
+            <div class="fav-modal-actions">
+                <button id="fav-modal-login">Ir a Login</button>
+                <button id="fav-modal-close">Cancelar</button>
+            </div>
+        </div>
+    </div>
     {% block body %}
     {% endblock %}
     <script>
+        // Expose authentication status to JS
+        const isAuthenticated = {{ 'true' if current_user.is_authenticated else 'false' }};
         // Store URLs for use in JavaScript
         const logoutUrl = '{{ url_for("logout") }}';
         const loginUrl = '{{ url_for("login") }}';
@@ -193,9 +203,31 @@
                     });
                 });
             }
+
+            // Header favorites icon behavior: open favorites if logged, otherwise show modal
+            const headerFav = document.getElementById('headerFav');
+            const favLoginModal = document.getElementById('fav-login-modal');
+            if(headerFav){
+                headerFav.style.cursor = 'pointer';
+                headerFav.addEventListener('click', function(e){
+                    e.preventDefault();
+                    if(isAuthenticated){
+                        window.location.href = '/favoritos';
+                    } else {
+                        // open existing reusable modal
+                        if(favLoginModal){ favLoginModal.style.display = 'flex'; }
+                    }
+                });
+            }
+
+            // Favorite modal actions
+            const favModalLoginBtn = document.getElementById('fav-modal-login');
+            const favModalCloseBtn = document.getElementById('fav-modal-close');
+            if(favModalLoginBtn) favModalLoginBtn.addEventListener('click', function(){ window.location.href = '/login'; });
+            if(favModalCloseBtn) favModalCloseBtn.addEventListener('click', function(){ if(favLoginModal) favLoginModal.style.display = 'none'; });
         });
 
-                const searchApiUrl = '{{ url_for("search_songs") }}';
+        const searchApiUrl = '{{ url_for("search_songs") }}';
         
         // Search functionality
         let searchTimeout;
