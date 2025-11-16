@@ -32,8 +32,7 @@ def load_user(id):
 
 
 
-# Esta ruta renderiza la plantilla "index.html" cuando se accede a la ruta "/home".
-# Ruta de HOME
+# Ruta de HOME - renderiza index.html
 @app.route("/home")
 def home():
     return render_template("index.html")
@@ -43,8 +42,7 @@ def home():
 
 
 
-# Esta ruta renderiza la plantilla "fav.html" cuando se accede a la ruta "/fav".
-# Ruta de pagina de canciones favoritas
+# Ruta de canciones favoritas
 @app.route("/fav")
 def fav():
     return render_template("fav.html")
@@ -54,38 +52,45 @@ def fav():
 
 
 
-# Ruta dinamica de canciones
+# Ruta dinámica que obtiene los datos de una canción del archivo JSON correspondiente
 @app.route("/song/<title>")
 def song(title):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM songs WHERE title = %s", (title,))
+    cursor.execute("SELECT * FROM songs WHERE LOWER(title) = LOWER(%s)", (title,))
     song = cursor.fetchone()
 
     if not song:
-        return 404
+        return ('Song not found', 404)
 
     json_path = os.path.join("static", "tablatures", song["json_file"])
 
     with open(json_path, "r", encoding="utf-8") as f:
         tab_data = json.load(f)
 
-    return render_template("songs.html", song=song, tab_data=tab_data)
+    return render_template("songs.html", song=song, tab_data=tab_data, json_file=song["json_file"])
+
+
+@app.route("/api/search")
+def search_songs():
+    """API endpoint for searching songs"""
+    try:
+        query = request.args.get('q', '').strip()
+        
+        # If query is empty, return all songs
+        if not query or len(query) < 1:
+            results = ModelSong.get_all_songs(db, limit=100)
+        else:
+            results = ModelSong.search_songs(db, query, limit=10)
+        
+        return jsonify({'songs': results})
+    except Exception as ex:
+        return jsonify({'error': str(ex), 'songs': []}), 500
 
 
 
-
-'''
-Esta ruta gestiona el registro de nuevos usuarios.  
-Cuando se envía el formulario mediante una petición POST, primero se obtienen y normalizan los datos ingresados: nombre de usuario, correo electrónico y contraseña.  
-Luego se realizan varias validaciones: verificar que los campos obligatorios no estén vacíos, comprobar que el correo tenga un formato válido y asegurar que la contraseña cumpla con la longitud mínima requerida.  
-
-Después de validar los datos, se revisa si el nombre de usuario o el correo ya están registrados en la base de datos mediante ModelUser.user_exists().  
-Si ninguno está en uso, se crea un nuevo usuario con ModelUser.create_user() y se redirige a la página de inicio de sesión with un mensaje de éxito.  
-
-Si ocurre algún error durante el proceso, se captura la excepción y se muestra un mensaje explicando el problema.  
-Para solicitudes GET (cuando simplemente se accede a la página), la ruta únicamente renderiza el formulario de registro.
-'''
-# Rutas de REGISTER y LOGIN
+# Ruta de REGISTER - gestiona el registro de nuevos usuarios
+# Valida los datos del formulario, verifica que no existan usuarios con el mismo username o email
+# y crea el nuevo usuario si todo es correcto
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -136,10 +141,8 @@ def register():
 
 
 
-'''
-En esta ruta se obtienen los datos enviados desde el formulario y se crean con ellos los atributos del objeto "user". Luego, dichos datos se verifican mediante la función ModelUser.login(), que valida las credenciales en la base de datos. Si la autenticación es exitosa, se inicia la sesión del usuario y se redirige a la página principal. En caso contrario, se muestra un mensaje indicando que el usuario o la contraseña son incorrectos.
-'''
-# Ruta LOGIN y LOGOUT
+# Ruta de LOGIN - obtiene las credenciales del formulario y valida con la BD
+# Si son correctas, inicia la sesión del usuario
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -156,13 +159,8 @@ def login():
     
 
 
-'''
-Esta ruta se encarga de cerrar la sesión del usuario autenticado.  
-Primero ejecuta logout_user() para finalizar la sesión manejada por Flask-Login y luego limpia por completo la sesión con session.clear().  
-
-Si la petición proviene de AJAX (verificada mediante el encabezado 'X-Requested-With' o si el contenido es JSON), la ruta responde con un JSON indicando que el cierre de sesión fue exitoso.  
-En caso contrario, realiza una redirección hacia la página principal.
-'''
+# Ruta de LOGOUT - cierra la sesión del usuario
+# Si es una petición AJAX retorna JSON, sino redirige al home
 @app.route("/logout", methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -175,7 +173,8 @@ def logout():
 
 
 
-# Manejo de errores
+# Manejadores de errores
+@app.errorhandler(401)
 def status_401(error):
     return redirect(url_for("login"))
 

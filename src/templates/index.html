@@ -3,6 +3,7 @@
 {% block title %}Home{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/carousel.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -20,7 +21,34 @@
 
 <main>
     <div class="main-container">
-        <div class="carousel"></div>
+        <div class="carousel" aria-roledescription="carousel">
+            <div class="slides">
+                <div class="slide" 
+                    style="background-image: url('{{ url_for('static', filename='images/carrusel/image1.webp') }}')" 
+                    aria-hidden="false"></div>
+                <div class="slide" 
+                    style="background-image: url('{{ url_for('static', filename='images/carrusel/image2.webp') }}')" 
+                    aria-hidden="true"></div>
+                <div class="slide" 
+                    style="background-image: url('{{ url_for('static', filename='images/carrusel/image3.webp') }}')" 
+                    aria-hidden="true"></div>
+                <div class="slide" 
+                    style="background-image: url('{{ url_for('static', filename='images/carrusel/image4.webp') }}')" 
+                    aria-hidden="true"></div>
+                <div class="slide" 
+                    style="background-image: url('{{ url_for('static', filename='images/carrusel/image5.webp') }}')" 
+                    aria-hidden="true"></div>
+            </div>
+            <button class="carousel-btn prev" aria-label="Anterior">‹</button>
+            <button class="carousel-btn next" aria-label="Siguiente">›</button>
+            <div class="indicators" role="tablist">
+                <button class="indicator" data-slide="0" aria-label="Ir a la diapositiva 1" aria-selected="true"></button>
+                <button class="indicator" data-slide="1" aria-label="Ir a la diapositiva 2" aria-selected="false"></button>
+                <button class="indicator" data-slide="2" aria-label="Ir a la diapositiva 3" aria-selected="false"></button>
+                <button class="indicator" data-slide="3" aria-label="Ir a la diapositiva 4" aria-selected="false"></button>
+                <button class="indicator" data-slide="4" aria-label="Ir a la diapositiva 5" aria-selected="false"></button>
+            </div>
+        </div>
         <div class="main-text">
             <h1>RustTab - tesina</h1>
             <h3>Laure</h3>
@@ -29,7 +57,7 @@
             <p>
             La elección del tema responde al interés personal en la música y el desarrollo web, así como a la detección de limitaciones en plataformas similares. A nivel académico, el proyecto permite aplicar conocimientos adquiridos en el curso, integrando diseño de interfaces, lógica de programación, gestión de componentes y documentación técnica.</p>
             <span>
-                <a href="{{url_for('home')}}">¡¡Comienza ya!!</a>
+                <a href="/song/monster">¡¡Comienza ya!!</a>
                 <a href="https://github.com/LaureanoCz/RustTab" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-github"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg>
                     Github
@@ -43,4 +71,5 @@
     <p>© 2025 Laureano Carranza</p>
 </footer>
 <script src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}

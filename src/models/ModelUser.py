@@ -6,23 +6,26 @@ class ModelUser():
     def login(self, db, user):
         try:
             cursor = db.connection.cursor()
-            sql = """SELECT id_user, username, password, email FROM usuarios
-                    WHERE username = '{}'""".format(user.username)
-            cursor.execute(sql)
+            sql = "SELECT id_user, username, password, email FROM users WHERE username = %s"
+            cursor.execute(sql, (user.username,))
             row = cursor.fetchone()
-            if row != None:
-                user = User(row[0], row[1], User.check_password(row[2], user.password), row[3])
-                return user
-            else:
-                return None
+
+            if row is not None:
+                password_correct = User.check_password(row[2], user.password)
+                if password_correct:
+                    return User(row[0], row[1], row[2], row[3])
+            
+            return None
+
         except Exception as ex:
             raise Exception(ex)
+
 
     @classmethod
     def get_by_id(cls, db, id):
         try:
             cursor = db.connection.cursor()
-            sql = "SELECT id_user, username, email FROM usuarios WHERE id_user = %s"
+            sql = "SELECT id_user, username, email FROM users WHERE id_user = %s"
             cursor.execute(sql, (id,))
             row = cursor.fetchone()
             if row != None:
@@ -38,12 +41,12 @@ class ModelUser():
         try:
             cursor = db.connection.cursor()
             if username:
-                sql = "SELECT id_user FROM usuarios WHERE username = %s"
+                sql = "SELECT id_user FROM users WHERE username = %s"
                 cursor.execute(sql, (username,))
                 if cursor.fetchone():
                     return True
             if email:
-                sql = "SELECT id_user FROM usuarios WHERE email = %s"
+                sql = "SELECT id_user FROM users WHERE email = %s"
                 cursor.execute(sql, (email,))
                 if cursor.fetchone():
                     return True
@@ -58,7 +61,7 @@ class ModelUser():
             # Hash the password before storing
             hashed_password = generate_password_hash(password)
             cursor = db.connection.cursor()
-            sql = "INSERT INTO usuarios (username, email, password) VALUES (%s, %s, %s)"
+            sql = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
             cursor.execute(sql, (username, email, hashed_password))
             db.connection.commit()
             return True

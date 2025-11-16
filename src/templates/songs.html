@@ -1,30 +1,40 @@
 {% extends "layout.html" %}
 
 {% block title %}{{ song['title'] }} - RustTab{% endblock %}
-{% block styles %} <link rel="stylesheet" href="{{ url_for('static', filename='css/vexflow/songs.css') }}"> {% endblock %}
+
+{% block styles %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vexflow/songs.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.1.0/build/cjs/vexflow-debug.js"></script>
+{% endblock %}
 
 {% block body %}
 
-<!-- Cargar VexFlow PRIMERO (sin defer) -->
-<script src="https://cdn.jsdelivr.net/npm/vexflow@4.1.0/build/vexflow-min.js"></script>
 
-<script>
-    const TAB_DATA = {{ tab_data | tojson }};
-</script>
-    
-<!-- Cargar el script personalizado DESPUÉS (con defer) -->
-<script src="{{ url_for('static', filename='js/render.js') }}" defer></script>
+{% set url = song['youtube_url'] %}
+{% set id = url.split('v=')[-1].split('&')[0] %}
+
+
 
 <main class="parent">
     <div class="div1 song-info">
         <h1>{{ song['title'] }}</h1>
         <h2>{{ song['artist'] }}</h2>
         <span>fecha de publicacion: {{song['release_date']}}</span>
-        <iframe width="454" height="150" src="{{ song['youtube_url'] }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="454" height="150"
+    src="https://www.youtube.com/embed/{{ id }}"
+    frameborder="0" allowfullscreen></iframe>
+    
     </div>
     <div class="div2" id="tab-container">
         <div id="tab"></div>
     </div>
 </main>
+<script>
+    const TAB_DATA = JSON.parse(`{{ tab_data | tojson | safe }}`);
+    const JSON_FILE = "{{ json_file }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/render.js') }}"></script>
+
 
 {% endblock %}

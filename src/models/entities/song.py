@@ -9,5 +9,5 @@ class Song:
         self.ligaduras = ligaduras
         self.compases = compases
         self.corcheas = corcheas
-        self.tablatura_data = tablatura_data  # JSON string or file path for tablature data
+        self.tablatura_data = tablatura_data
 

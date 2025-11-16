@@ -52,6 +52,7 @@ header {
     border: 2px solid #8ff000;
     border-radius: 20px;
     right: 0px;
+    background-color: #0f0f0f;
 }
 
 .user-info {
@@ -100,7 +101,8 @@ header {
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;  /* antes: center */
+  padding-top: 100px;        /* agrega margen arriba para que no quede pegado */
   z-index: 1000;
   backdrop-filter: blur(4px);
   transition: opacity 0.3s ease;
@@ -117,17 +119,18 @@ header {
   display: flex;
   flex-direction: column;
   padding-bottom: 10px;
+  border: 1px solid #8ff000;
 }
 
 /* --- Header de búsqueda --- */
 .search-header {
   position: relative;
-  padding: 1rem;
+  padding: 0.5rem;
+  margin: 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #151515;
-  border-bottom: 1px solid #1f1f1f;
+  border-bottom: 1px solid #8ff000;
 }
 
 .search-header input.searchInput {
@@ -171,7 +174,7 @@ header {
   overflow-y: auto;
 }
 
-/* --- Cada item de resultado --- */
+/* --- Cada item --- */
 .search-result-item {
   background: #1b1b1b;
   border-radius: 10px;
@@ -210,4 +213,37 @@ header {
   font-size: 0.8rem;
   color: #aaa;
   margin: 0;
+}
+
+/* --- Estados --- */
+.search-loading,
+.search-error,
+.search-no-results {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Scrollbar */
+.search-results::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+.search-results::-webkit-scrollbar-thumb {
+  background-color: #8ff000;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.search-results {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #8ff000 transparent;
+  max-height: calc(80vh - 120px);
+  padding-right: 6px;
 }

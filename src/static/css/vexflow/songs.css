@@ -17,8 +17,10 @@
 
 /* Panel derecho (tablatura) */
 .div2 {
-    margin: 0 2rem;
+    margin: 0 1rem;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #8ff000 transparent;
 }
 
 /* Contenedor de la tab */
@@ -26,11 +28,28 @@
     width: auto;
     display: flex;
     justify-content: center;
-    border-radius: 20px;
-    padding: 2rem;
+    padding: 0 1.5rem;
 }
 
-/* Información de la canción */
+.div2::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+}
+.div2::-webkit-scrollbar-track {
+    background: transparent;
+}
+.div2::-webkit-scrollbar-thumb {
+    background-color: #8ff000;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.div2 {
+    -webkit-overflow-scrolling: touch;
+}
+
 .song-info {
     text-align: center;
     color: #f0f0f0;

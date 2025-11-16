@@ -35,6 +35,7 @@
 
             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-help"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l0 .01" /><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" /></svg>
         </div>
+
         <div class="header-icons-3" id="headerIcons3">
             {% if current_user.is_authenticated %}
                 <div class="user-menu-container">
@@ -72,11 +73,22 @@
                 </a>
             {% endif %}
         </div>
+        </div>
     </header>
     <!-- Logout notification modal -->
     <div id="logoutNotification" class="logout-notification" style="display: none;">
         <div class="logout-notification-content">
             <p>Ha cerrado sesión correctamente.</p>
+        </div>
+    </div>
+    <!-- Search Modal -->
+    <div id="searchModal" class="search-modal" style="display: none;">
+        <div class="search-modal-content">
+            <div class="search-header">
+                <input type="text" id="searchInput" class="searchInput" placeholder="Buscar canciones...">
+                <span id="closeSearchModal" class="close-search-btn">✕</span>
+            </div>
+            <div id="searchResults" class="search-results"></div>
         </div>
     </div>
     {% block body %}
@@ -182,6 +194,155 @@
                 });
             }
         });
+
+                const searchApiUrl = '{{ url_for("search_songs") }}';
+        
+        // Search functionality
+        let searchTimeout;
+        const searchIcon = document.getElementById('searchIcon');
+        const searchModal = document.getElementById('searchModal');
+        const closeSearchModal = document.getElementById('closeSearchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        // Open search modal
+        if (searchIcon) {
+            searchIcon.addEventListener('click', function() {
+                if (searchModal) {
+                    searchModal.style.display = 'flex';
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                    // Load all songs when modal opens
+                    performSearch('');
+                }
+            });
+        }
+        
+        // Close search modal
+        if (closeSearchModal) {
+            closeSearchModal.addEventListener('click', function() {
+                if (searchModal) {
+                    searchModal.style.display = 'none';
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                    if (searchResults) {
+                        searchResults.innerHTML = '';
+                    }
+                }
+            });
+        }
+        
+        // Close modal when clicking outside
+        if (searchModal) {
+            searchModal.addEventListener('click', function(e) {
+                if (e.target === searchModal) {
+                    searchModal.style.display = 'none';
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                    if (searchResults) {
+                        searchResults.innerHTML = '';
+                    }
+                }
+            });
+        }
+        
+        // Real-time search as user types
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                
+                clearTimeout(searchTimeout);
+                
+                // Debounce search - wait 300ms after user stops typing
+                // If query is empty, show all songs
+                searchTimeout = setTimeout(function() {
+                    performSearch(query);
+                }, 300);
+            });
+            
+            // Handle Enter key
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = e.target.value.trim();
+                    clearTimeout(searchTimeout);
+                    performSearch(query);
+                }
+            });
+        }
+        
+        // Perform search function
+        function performSearch(query) {
+            if (!searchResults) return;
+            
+            // Show loading state
+            searchResults.innerHTML = '<div class="search-loading">Buscando...</div>';
+            
+            // Fetch results from API
+            const url = query ? `${searchApiUrl}?q=${encodeURIComponent(query)}` : `${searchApiUrl}?q=`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        searchResults.innerHTML = '<div class="search-error">Error al buscar canciones</div>';
+                        return;
+                    }
+                    
+                    const songs = data.songs || [];
+                    
+                    if (songs.length === 0) {
+                        searchResults.innerHTML = '<div class="search-no-results">No se encontraron canciones</div>';
+                        return;
+                    }
+                    
+                    // Display results
+                    let resultsHTML = '';
+                    songs.forEach(song => {
+                        // Use titulo as the route parameter (it's the <title> in /song/<title>)
+                        const slug = song.slug || song.titulo.toLowerCase()
+                            .replace(/\s+/g, '_')
+                            .replace(/[^a-z0-9_]/g, '');
+                        
+                        // Store song data in data attributes for click handler
+                        resultsHTML += `
+                            <div class="search-result-item" 
+                                 data-song-id="${song.id}" 
+                                 data-song-slug="${escapeHtml(slug)}"
+                                 data-song-title="${escapeHtml(song.titulo)}">
+                                <div class="result-info">
+                                    <div class="result-texts">
+                                        <p class="title">${escapeHtml(song.titulo)}</p>
+                                        <p class="artist">${escapeHtml(song.artista)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    searchResults.innerHTML = resultsHTML;
+                    
+                    // Add click handlers to results
+                    const resultItems = searchResults.querySelectorAll('.search-result-item');
+                    resultItems.forEach(item => {
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const songId = this.getAttribute('data-song-id');
+                            const songSlug = this.getAttribute('data-song-slug');
+                            
+                            // Build URL using slug (title)
+                            const songUrl = `/song/${encodeURIComponent(songSlug)}`;
+                            console.log('Navigating to:', songUrl); // Debug log
+                            window.location.href = songUrl;
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    searchResults.innerHTML = '<div class="search-error">Error al buscar canciones</div>';
+                });
+        }
     </script>
 </body>
 </html>
