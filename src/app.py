@@ -91,6 +91,12 @@ def song(title):
     with open(json_path, "r", encoding="utf-8") as f:
         tab_data = json.load(f)
 
+    # `tab_data` es un diccionario Python con la tablatura (parsed JSON).
+    # La plantilla debe inyectar este objeto en la página (p. ej. como
+    # variable JavaScript `TAB_DATA`) para que `static/js/render.js`
+    # pueda transformar la estructura JSON en objetos de Vex.Flow y
+    # renderizar la tablatura en el cliente.
+
     is_favorite = False
     try:
         if current_user and current_user.is_authenticated:

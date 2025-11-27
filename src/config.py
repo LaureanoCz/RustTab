@@ -11,6 +11,7 @@ class DevelopmentConfig(config):
     MYSQL_PASSWORD = ''
     MYSQL_DB = 'rusttab'
     SECRET_KEY = 'YmO{!z`i/m<b-['
+    PORT = "3308"
 
 
 config = {

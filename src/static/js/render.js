@@ -25,6 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const defaultTabUrl = 'static/tablatures/monster_skillet.json';
 
   // Mapea duraciones a identificadores de Vex.Flow
+  // --- Transformación JSON -> Vex.Flow: funciones clave ---
+  // `mapDuration`, `makeTabNote` y `renderFromJSON` son las funciones
+  // responsables de convertir la estructura JSON de tablatura en objetos
+  // y llamadas que Vex.Flow entiende (p. ej. `VF.TabNote`, `VF.TabStave`).
+  //
+  // - `mapDuration`: normaliza el campo de duración del JSON al formato
+  //   que Vex.Flow espera.
   function mapDuration(d) {
     if (!d && d !== 0) return 'q';
     if (typeof d === 'string') {
@@ -44,6 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Construye una nota de tablatura desde un objeto del JSON
+  // `makeTabNote` recibe un objeto de nota del JSON y devuelve una
+  // instancia `VF.TabNote` con la propiedad `positions` y `duration`.
+  // Esta es la pieza que mapea las propiedades del JSON (string, fret,
+  // duration) a la API de Vex.Flow.
   function makeTabNote(n) {
     const str = n.str || n.string || n.stringNumber || n.s || n['string_number'] || 1;
     const fret = (n.fret !== undefined) ? n.fret : (n.f !== undefined ? n.f : 0);
@@ -55,6 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Renderiza desde la estructura JSON
+  // `renderFromJSON` itera sobre los compases/medidas del JSON, convierte
+  // cada entrada en notas (usando `makeTabNote`) y dibuja los compases
+  // llamando a `drawMeasure`. Es la función que orquesta la transformación
+  // completa del JSON hacia la representación visual con Vex.Flow.
   function renderFromJSON(data) {
     const measures = data.measures || data;
     const totalMeasures = measures.length;
@@ -120,8 +135,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Carga la tablatura desde TAB_DATA (si viene de la plantilla) o desde fetch
+  // Obtención del JSON para transformar:
+  // Si la plantilla inyectó `TAB_DATA` (variable JS con el JSON), se usa
+  // directamente. En caso contrario se hace `fetch` al archivo JSON y
+  // luego se llama a `renderFromJSON` para transformar y dibujar.
   if (typeof TAB_DATA !== 'undefined' && TAB_DATA) {
+    // TAB_DATA ya es un objeto JS (inyectado por la plantilla). Se pasa
+    // directamente a `renderFromJSON` para su conversión a Vex.Flow.
     renderFromJSON(TAB_DATA);
   } else {
     const dataAttr = div.dataset.tablature;
