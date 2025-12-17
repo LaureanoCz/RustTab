@@ -9,12 +9,6 @@
 
 {% block body %}
 
-
-{% set url = song['youtube_url'] %}
-{% set id = url.split('v=')[-1].split('&')[0] %}
-
-
-
 <main class="parent">
     <div class="div1 song-info">
         <button id="favorite-btn" class="favorite-btn" aria-label="Toggle favorite"
@@ -29,9 +23,10 @@
         <h1>{{ song['title'] }}</h1>
         <h2>{{ song['artist'] }}</h2>
         <span>fecha de publicacion: {{song['release_date']}}</span>
-        <iframe width="454" height="150"
-        src="https://www.youtube.com/embed/{{ id }}"
-        frameborder="0" allowfullscreen></iframe>
+        <video width="400" height="300" controls>
+            <source src="{{ url_for('static', filename=song['video_file']) }}" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
     
     </div>
     <div class="div2" id="tab-container">
@@ -102,6 +97,5 @@
 </script>
 
 <script src="{{ url_for('static', filename='js/render.js') }}"></script>
-
 
 {% endblock %}
